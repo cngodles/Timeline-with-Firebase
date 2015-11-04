@@ -9,22 +9,48 @@ var timeline = {
     monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     init: function () {
         var thisobj = this;
+        var loadedData;
         thisobj.firebase = new Firebase('https://ralena.firebaseio.com/timeline/events');
         thisobj.firebase.on('value', function (snapshot) {
-            thisobj.events = snapshot.val();
+            loadedData = snapshot.val();
+            //console.log('Objects Loaded: '+loadedData);
+            
+            
+            for (var i in loadedData) {
+                if (loadedData.hasOwnProperty(i)) {
+                    timeline.events.push({'name':loadedData[i].name,'length':loadedData[i].length,'startdate':loadedData[i].startdate});
+                }
+            }
+            
+            
+            /*
+            for (i = 0; i < loadedData.length; i++) {
+                thisobj.events.push(loadedData[i]);
+            }
+            */
+            //thisobj.events = snapshot.val();
             thisobj.addEvents();
         });
     },
     addEvents: function () {
+
         $("#time .event").remove();
-        for (i = 0; i < this.timeline.events.length; i++) {
-            $("#time").append('<div class="event" style="width:205px; height:30px; background-color:red; position:absolute; top:170px; left:205px;"></div>');
+        for (i = 0; i < this.events.length; i++) {
+            var startpos = 410;
+            var eventStartDate = new Date(this.events[i].startdate);
+            
+            // Do the math.
+            var millisecondsPerDay = 86400000;
+            var millisBetween = eventStartDate.getTime() - this.start.getTime();
+            var eventdays = Math.floor(millisBetween / millisecondsPerDay);
+            
+            $("#time").append('<div class="event" style="width:'+(this.events[i].length * 41)+'px; height:30px; background-color:red; position:absolute; top:170px; left:'+(eventdays * 41)+'px;">'+this.events[i].name+'</div>');
         }
     },
     run: function () {
         var start = new Date("06/14/2010");
         var end = new Date();
-
+        this.start = start;
 
 
         var push = [];
