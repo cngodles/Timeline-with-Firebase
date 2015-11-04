@@ -1,0 +1,34 @@
+#time {
+    display:block;
+    height:300px;
+    position:relative;
+}
+#time .month {
+    display:block;
+    height:500px;
+    float:left;
+}
+#time .month h3 {
+    display:block;
+    clear:both;
+}
+#time .year {
+    display:block;
+    height:600px;
+    float:left;
+}
+#time .year h2 {
+    display:block;
+    clear:both;
+}
+#time .col {
+    display:block;
+    width:40px;
+    height:300px;
+    float:left;
+    border-right:1px solid #ccc;
+    text-align:center;
+}
+#time .col:hover {
+    background-color:#efefef;
+}
