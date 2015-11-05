@@ -11,4 +11,9 @@ $(document).ready(function () {
     e.preventDefault();
     timeline.firebase.push({'name':'Sample Event','length':7,'startdate':'2010-6-25'});
 })
+.on("click", ".action_addformevent", function(e){
+    e.preventDefault();
+    $("#datapool").html($(".addeventfield").serialize());
+    //timeline.firebase.push({'name':'Sample Event','length':7,'startdate':'2010-6-25'});
+})
 ;

@@ -33,7 +33,7 @@ var timeline = {
         });
     },
     addEvents: function () {
-
+        //Loops through Firebase events and adds them to the timeline.
         $("#time .event").remove();
         for (i = 0; i < this.events.length; i++) {
             var startpos = 410;

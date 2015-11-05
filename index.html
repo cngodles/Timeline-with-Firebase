@@ -14,15 +14,25 @@
 <body>
     
     
-<h1>Timeline</h1>
-<a href="#" class="action_addevent">+ Add Test Event</a>
+    <h1>Timeline</h1>
+    <a href="#" class="action_addevent">+ Add Test Event</a>
 
-<div id="time"></div>
+    <div id="time"></div>
     
+    <div id="form_addevent">
+        <div>Event Title</div>
+        <div><input name="name" class="addeventfield" type="text"></div>
+        <div>Event Date</div>
+        <div><input name="startdate" class="addeventfield" type="text"></div>
+        <div>Event Length In Days</div>
+        <div><input name="length" class="addeventfield" type="text"></div>
+        <div><input type="button" class="action_addformevent" value="Add Event"></div>
+    </div>  
+    <div id="datapool">Data feeds here.</div>
+    <link rel="stylesheet" type="text/css" href="css/timeline.base.css">
     <script src='https://cdn.firebase.com/js/client/2.3.1/firebase.js'></script>
-  <link rel="stylesheet" type="text/css" href="css/timeline.base.css">
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script type="text/javascript" src="js/timeline.main.js"></script>
-  <script type="text/javascript" src="js/timeline.events.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="js/timeline.main.js"></script>
+    <script type="text/javascript" src="js/timeline.events.js"></script>
 </body>
 </html>
