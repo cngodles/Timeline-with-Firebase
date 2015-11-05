@@ -13,7 +13,7 @@ var timeline = {
         thisobj.firebase = new Firebase('https://ralena.firebaseio.com/timeline/events');
         thisobj.firebase.on('value', function (snapshot) {
             loadedData = snapshot.val();
-                        
+            timeline.events = [];   
             for (var i in loadedData) {
                 if (loadedData.hasOwnProperty(i)) {
                     timeline.events.push({'name':loadedData[i].name,'length':loadedData[i].length,'startdate':loadedData[i].startdate});
