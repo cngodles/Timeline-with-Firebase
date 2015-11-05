@@ -34,8 +34,9 @@ var timeline = {
             // Do the math.
             var millisecondsPerDay = 86400000;
             var millisBetween = eventStartDate.getTime() - this.start.getTime();
-            var eventdays = Math.floor(millisBetween / millisecondsPerDay);
-            
+            var eventdays = Math.ceil(millisBetween / millisecondsPerDay) + 1;
+            //Not sure why I had to add 1 to get them positioned correctly, but that is where we are.
+            console.log("Start Day Seperation: "+eventdays);
             $("#time").append('<div class="event" style="width:'+(this.events[i].length * 41)+'px; height:30px; background-color:red; position:absolute; color:#fff; top:'+eventpostop+'px; line-height:30px; left:'+(eventdays * 41)+'px;">&nbsp;&nbsp;&nbsp;'+this.events[i].name+'</div>');
             eventpostop += 40;
         }
