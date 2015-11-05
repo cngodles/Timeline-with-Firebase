@@ -13,28 +13,20 @@ var timeline = {
         thisobj.firebase = new Firebase('https://ralena.firebaseio.com/timeline/events');
         thisobj.firebase.on('value', function (snapshot) {
             loadedData = snapshot.val();
-            //console.log('Objects Loaded: '+loadedData);
-            
-            
+                        
             for (var i in loadedData) {
                 if (loadedData.hasOwnProperty(i)) {
                     timeline.events.push({'name':loadedData[i].name,'length':loadedData[i].length,'startdate':loadedData[i].startdate});
                 }
             }
-            
-            
-            /*
-            for (i = 0; i < loadedData.length; i++) {
-                thisobj.events.push(loadedData[i]);
-            }
-            */
-            //thisobj.events = snapshot.val();
+
             thisobj.addEvents();
         });
     },
     addEvents: function () {
         //Loops through Firebase events and adds them to the timeline.
-        $("#time .event").remove();
+        $(".event").remove();
+        var eventpostop = 170;
         for (i = 0; i < this.events.length; i++) {
             var startpos = 410;
             var eventStartDate = new Date(this.events[i].startdate);
@@ -44,7 +36,8 @@ var timeline = {
             var millisBetween = eventStartDate.getTime() - this.start.getTime();
             var eventdays = Math.floor(millisBetween / millisecondsPerDay);
             
-            $("#time").append('<div class="event" style="width:'+(this.events[i].length * 41)+'px; height:30px; background-color:red; position:absolute; top:170px; left:'+(eventdays * 41)+'px;">'+this.events[i].name+'</div>');
+            $("#time").append('<div class="event" style="width:'+(this.events[i].length * 41)+'px; height:30px; background-color:red; position:absolute; color:#fff; top:'+eventpostop+'px; line-height:30px; left:'+(eventdays * 41)+'px;">&nbsp;&nbsp;&nbsp;'+this.events[i].name+'</div>');
+            eventpostop += 40;
         }
     },
     run: function () {
