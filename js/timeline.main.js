@@ -41,7 +41,7 @@ var timeline = {
         $(".event").remove();
         var eventpostop = 170;
         for (i = 0; i < this.events.length; i++) {
-            var startpos = 410;
+            //var startpos = 410;
             var eventStartDate = new Date(this.events[i].startdate);
             
             // Do the math.
@@ -50,7 +50,7 @@ var timeline = {
             var eventdays = Math.ceil(millisBetween / millisecondsPerDay) + 1;
             //Not sure why I had to add 1 to get them positioned correctly, but that is where we are.
             console.log("Start Day Seperation: "+eventdays);
-            $("#time").append('<div class="event" id="event_'+this.events[i].id+'" style="width:'+(this.events[i].length * 41)+'px; height:30px; background-color:red; position:absolute; color:#fff; top:'+eventpostop+'px; line-height:30px; left:'+(eventdays * 41)+'px;">&nbsp;&nbsp;&nbsp;'+this.events[i].name+'</div>');
+            $("#time").append('<div class="event" data-startdate="'+this.events[i].startdate+'" id="event_'+this.events[i].id+'" style="width:'+(this.events[i].length * this.width)+'px; height:30px; background-color:red; position:absolute; color:#fff; top:'+eventpostop+'px; line-height:30px; left:'+(eventdays * 41)+'px;">&nbsp;&nbsp;&nbsp;'+this.events[i].name+'</div>');
             eventpostop += 40;
         }
         this.resizers();
@@ -65,21 +65,26 @@ var timeline = {
             handles:'e,w',
             stop: function( event, ui ) {
                 //Going to need to adjust based on new position as well in case of left side resize.
-                if(ui.position.left != ui.originalPosition.left){
-                    var daystosubtract
+                var thisid = ui.originalElement.attr("id").split('_');
+				console.log(thisid[1]);
+				var newlength = (ui.size.width / thisobj.width);
+				if(ui.position.left != ui.originalPosition.left){
+                    //If the left side position has changed due to a resize event.
+					var daystosubtract;;
                     if(ui.position.left < ui.originalPosition.left){
                         //subtraction days.
-                        daystosubtract = (ui.originalPosition.left - ui.position.left) / thisobj.width;
+                        daystosubtract = (((ui.originalPosition.left - ui.position.left) / thisobj.width) - 1) * -1;
                     } else {
                         //addition days.
-                        daystosubtract = (ui.position.left - ui.originalPosition.left) / thisobj.width;
+                        daystosubtract = ((ui.position.left - ui.originalPosition.left) / thisobj.width) + 1;
                     }
                     console.log(daystosubtract);
-                }
-                var newlength = (ui.size.width / thisobj.width);
-                var thisid = ui.originalElement.attr("id").split('_');
-                console.log(thisid[1]);
-                thisobj.firebase.child(thisid[1]).update({"length":newlength});
+                    var originalstartdate = new Date(ui.originalElement.data('startdate'));
+					var finalnewleftdate = ($.datepicker.formatDate("yy-mm-dd", new Date(originalstartdate.getTime() + (86400000 * daystosubtract))));
+					thisobj.firebase.child(thisid[1]).update({'length':newlength,'startdate':finalnewleftdate});
+                } else {
+					thisobj.firebase.child(thisid[1]).update({'length':newlength});
+				}
             }
         })
         .draggable({
