@@ -5,18 +5,31 @@ var timeline = {
     month: '',
     width: 41,
     firebase: false,
+    projectbase:false,
     events: [],
+    projects:[],
     monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     init: function () {
         var thisobj = this;
-        var loadedData;
-        thisobj.firebase = new Firebase('https://ralena.firebaseio.com/timeline/events');
-        thisobj.firebase.on('value', function (snapshot) {
-            loadedData = snapshot.val();
+        this.firebase = new Firebase('https://ralena.firebaseio.com/timeline/events');
+        this.firebase.on('value', function (snapshot) {
+            var loadedData = snapshot.val();
             timeline.events = [];   
             for (var i in loadedData) {
                 if (loadedData.hasOwnProperty(i)) {
-                    timeline.events.push({'name':loadedData[i].name,'length':loadedData[i].length,'startdate':loadedData[i].startdate});
+                    timeline.events.push({'id':i,'name':loadedData[i].name,'length':loadedData[i].length,'startdate':loadedData[i].startdate});
+                }
+            }
+
+            thisobj.addEvents();
+        });
+        this.projectbase = new Firebase('https://ralena.firebaseio.com/timeline/projects');
+        this.projectbase.on('value', function (snapshot) {
+            var loadedProjectData = snapshot.val();
+            timeline.projects = [];   
+            for (var i in loadedProjectData) {
+                if (loadedProjectData.hasOwnProperty(i)) {
+                    timeline.projects.push({'name':loadedData[i].name,'length':loadedData[i].length,'startdate':loadedData[i].startdate});
                 }
             }
 
@@ -37,14 +50,48 @@ var timeline = {
             var eventdays = Math.ceil(millisBetween / millisecondsPerDay) + 1;
             //Not sure why I had to add 1 to get them positioned correctly, but that is where we are.
             console.log("Start Day Seperation: "+eventdays);
-            $("#time").append('<div class="event" style="width:'+(this.events[i].length * 41)+'px; height:30px; background-color:red; position:absolute; color:#fff; top:'+eventpostop+'px; line-height:30px; left:'+(eventdays * 41)+'px;">&nbsp;&nbsp;&nbsp;'+this.events[i].name+'</div>');
+            $("#time").append('<div class="event" id="event_'+this.events[i].id+'" style="width:'+(this.events[i].length * 41)+'px; height:30px; background-color:red; position:absolute; color:#fff; top:'+eventpostop+'px; line-height:30px; left:'+(eventdays * 41)+'px;">&nbsp;&nbsp;&nbsp;'+this.events[i].name+'</div>');
             eventpostop += 40;
         }
+        this.resizers();
+    },
+    resizers:function(){
+      var thisobj = this;
+        $(".event")
+          .resizable({
+            grid:[41,30],
+            minHeight:30,
+            maxHeight:30,
+            handles:'e,w',
+            stop: function( event, ui ) {
+                var newlength = (ui.size.width / thisobj.width);
+                var thisid = ui.originalElement.attr("id").split('_');
+                console.log(thisid[1]);
+                thisobj.firebase.child(thisid[1]).update({"length":newlength});
+            }
+        })
+        .draggable({
+            axis:'x',
+            grid:[41,40],
+            stop: function( event, ui ) {
+                var newstartdate;
+                if(ui.position.left > 0){
+                    var slot = ui.position.left / thisobj.width;
+                    console.log(slot);
+                    var datemili = thisobj.start.getTime() + (86400000 * slot);
+                    console.log(datemili);
+                    newstartdate = new Date(datemili);
+                } else {
+                    newstartdate = thisobj.start;
+                }
+                alert(ui.position.left + ' ' +newstartdate);
+            }
+      });  
     },
     run: function () {
-        var start = new Date("06/14/2010");
+        //var start = new Date("06/14/2010");
         var end = new Date();
-        this.start = start;
+        var start = this.start;
 
 
         var push = [];

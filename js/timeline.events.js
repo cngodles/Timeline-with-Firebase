@@ -1,7 +1,7 @@
 $(document).ready(function () {
     //alert('hi');
     
-    timeline.start = new Date(2010, 5, 14, 7, 34, 0, 0);
+    timeline.start = new Date("06/14/2010");
     timeline.run();
     timeline.init();
     
