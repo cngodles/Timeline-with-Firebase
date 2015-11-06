@@ -50,7 +50,7 @@ var timeline = {
             var eventdays = Math.ceil(millisBetween / millisecondsPerDay) + 1;
             //Not sure why I had to add 1 to get them positioned correctly, but that is where we are.
             console.log("Start Day Seperation: "+eventdays);
-            $("#time").append('<div class="event" id="event_'+this.events[i].id+'" style="width:'+(this.events[i].length * 41)+'px; height:30px; background-color:red; position:absolute; color:#fff; top:'+eventpostop+'px; line-height:30px; left:'+(eventdays * 41)+'px;">&nbsp;&nbsp;&nbsp;'+this.events[i].name+'</div>');
+            $("#time").append('<div class="event source" id="event_'+this.events[i].id+'" style="width:'+(this.events[i].length * 41)+'px; height:30px; background-color:red; position:absolute; color:#fff; top:'+eventpostop+'px; line-height:30px; left:'+(eventdays * 41)+'px;"><p class="editable" style="margin:0 0 0 20px;">'+this.events[i].name+'</p></div>');
             eventpostop += 40;
         }
         this.resizers();

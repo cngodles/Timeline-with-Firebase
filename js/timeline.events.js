@@ -22,4 +22,46 @@ $(document).ready(function () {
     timeline.firebase.push({'name':eventfields.name,'length':eventfields.days,'startdate':eventfields.date});
     $("#datapool").show().html('Event Added.').delay(10).fadeOut(1000);
 })
+.on("click", ".editable", function(){
+    if(!$(this).hasClass("editing")){
+        var text = $(this).text();
+        if(text.indexOf("+ Add") == 0){
+            text = '';
+        }
+        $(this).html('<input value="'+text+'">').addClass("editing");
+        $(this).find("input").focus();
+    }
+    return false;
+})
+.on("blur", ".editable input", function(){
+    var thisevent = $(this);
+    var thisid = thisevent.parents(".source").attr("id").split("_");
+    var newvalue = thisevent.val();
+    var thistype = thisevent.parent().attr("rel");
+    //console.log(thisid[0]+' '+thisid[1]+' '+newvalue+' '+thistype);
+    if(newvalue.length == 0){
+        newvalue = thisevent.parent().data('default');
+    }
+    if(newvalue.indexOf("+ Add") == -1 && newvalue.indexOf("+ YouTube") == -1){
+        // $.post("ajax_services.php", {"do":"update","type":thisid[0],"target":thistype,"id":thisid[1],"value":newvalue});
+
+        event = timeline.firebase.child();
+
+        console.log(event);
+
+
+        // timeline.firebase.once('value', function(snapshot){
+            
+        //     console.log(snapshot.val());
+
+        //     // var loadedData = snapshot.val();
+        //     // for (var i in loadedData){
+        //     //     if(i == thisid[1]){
+        //     //         loadedData[i].name = newvalue;                    
+        //     //     }
+        //     // };
+        // })
+    }
+    setTimeout(function(){ thisevent.parent().html(newvalue).removeClass("editing"); }, 500);
+})
 ;
