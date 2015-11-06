@@ -64,6 +64,18 @@ var timeline = {
             maxHeight:30,
             handles:'e,w',
             stop: function( event, ui ) {
+                //Going to need to adjust based on new position as well in case of left side resize.
+                if(ui.position.left != ui.originalPosition.left){
+                    var daystosubtract
+                    if(ui.position.left < ui.originalPosition.left){
+                        //subtraction days.
+                        daystosubtract = (ui.originalPosition.left - ui.position.left) / thisobj.width;
+                    } else {
+                        //addition days.
+                        daystosubtract = (ui.position.left - ui.originalPosition.left) / thisobj.width;
+                    }
+                    console.log(daystosubtract);
+                }
                 var newlength = (ui.size.width / thisobj.width);
                 var thisid = ui.originalElement.attr("id").split('_');
                 console.log(thisid[1]);
