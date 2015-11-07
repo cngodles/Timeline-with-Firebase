@@ -4,6 +4,7 @@ var timeline = {
     year: 0,
     month: '',
     width: 41,
+    height:30,
     firebase: false,
     projectbase:false,
     events: [],
@@ -17,12 +18,13 @@ var timeline = {
             timeline.events = [];   
             for (var i in loadedData) {
                 if (loadedData.hasOwnProperty(i)) {
-                    timeline.events.push({'id':i,'name':loadedData[i].name,'length':loadedData[i].length,'startdate':loadedData[i].startdate});
+                    timeline.events.push({'id':i,'color':loadedData[i].color,'name':loadedData[i].name,'length':loadedData[i].length,'startdate':loadedData[i].startdate});
                 }
             }
 
             thisobj.addEvents();
         });
+        /*
         this.projectbase = new Firebase('https://ralena.firebaseio.com/timeline/projects');
         this.projectbase.on('value', function (snapshot) {
             var loadedProjectData = snapshot.val();
@@ -35,6 +37,7 @@ var timeline = {
 
             thisobj.addEvents();
         });
+        */
     },
     addEvents: function () {
         //Loops through Firebase events and adds them to the timeline.
@@ -50,7 +53,7 @@ var timeline = {
             var eventdays = Math.ceil(millisBetween / millisecondsPerDay) + 1;
             //Not sure why I had to add 1 to get them positioned correctly, but that is where we are.
             console.log("Start Day Seperation: "+eventdays);
-            $("#time").append('<div class="event" data-startdate="'+this.events[i].startdate+'" id="event_'+this.events[i].id+'" style="width:'+(this.events[i].length * this.width)+'px; height:30px; background-color:red; position:absolute; color:#fff; top:'+eventpostop+'px; line-height:30px; left:'+(eventdays * this.width)+'px;">&nbsp;&nbsp;&nbsp;'+this.events[i].name+'</div>');
+            $("#time").append('<div class="event '+this.events[i].color+'" data-startdate="'+this.events[i].startdate+'" id="event_'+this.events[i].id+'" style="position:absolute; width:'+(this.events[i].length * this.width)+'px; height:'+this.height+'px; line-height:'+this.height+'px; top:'+eventpostop+'px; left:'+(eventdays * this.width)+'px;">&nbsp;&nbsp;&nbsp;'+this.events[i].name+'</div>');
             eventpostop += 40;
         }
         this.resizers();
