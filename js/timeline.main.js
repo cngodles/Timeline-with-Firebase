@@ -50,7 +50,7 @@ var timeline = {
             var eventdays = Math.ceil(millisBetween / millisecondsPerDay) + 1;
             //Not sure why I had to add 1 to get them positioned correctly, but that is where we are.
             console.log("Start Day Seperation: "+eventdays);
-            $("#time").append('<div class="event" data-startdate="'+this.events[i].startdate+'" id="event_'+this.events[i].id+'" style="width:'+(this.events[i].length * this.width)+'px; height:30px; background-color:red; position:absolute; color:#fff; top:'+eventpostop+'px; line-height:30px; left:'+(eventdays * 41)+'px;">&nbsp;&nbsp;&nbsp;'+this.events[i].name+'</div>');
+            $("#time").append('<div class="event" data-startdate="'+this.events[i].startdate+'" id="event_'+this.events[i].id+'" style="width:'+(this.events[i].length * this.width)+'px; height:30px; background-color:red; position:absolute; color:#fff; top:'+eventpostop+'px; line-height:30px; left:'+(eventdays * this.width)+'px;">&nbsp;&nbsp;&nbsp;'+this.events[i].name+'</div>');
             eventpostop += 40;
         }
         this.resizers();
@@ -59,7 +59,8 @@ var timeline = {
       var thisobj = this;
         $(".event")
           .resizable({
-            grid:[41,30],
+            grid:[thisobj.width,30],
+            minWidth:thisobj.width,
             minHeight:30,
             maxHeight:30,
             handles:'e,w',
@@ -89,19 +90,20 @@ var timeline = {
         })
         .draggable({
             axis:'x',
-            grid:[41,40],
+            grid:[thisobj.width,40],
             stop: function( event, ui ) {
+                //console.log(ui.helper.attr("id"));
+                var thisid = ui.helper.attr("id").split('_');
                 var newstartdate;
                 if(ui.position.left > 0){
-                    var slot = ui.position.left / thisobj.width;
-                    console.log(slot);
+                    var slot = (ui.position.left / thisobj.width) - 1;
                     var datemili = thisobj.start.getTime() + (86400000 * slot);
-                    console.log(datemili);
-                    newstartdate = new Date(datemili);
+                    newstartdate = $.datepicker.formatDate("yy-mm-dd", new Date(datemili));
                 } else {
-                    newstartdate = thisobj.start;
+                    newstartdate = $.datepicker.formatDate("yy-mm-dd", thisobj.start);
                 }
-                alert(ui.position.left + ' ' +newstartdate);
+                thisobj.firebase.child(thisid[1]).update({'startdate':newstartdate});
+                console.log(newstartdate);
             }
       });  
     },
