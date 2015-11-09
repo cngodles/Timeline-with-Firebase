@@ -28,25 +28,28 @@ $(document).ready(function () {
         if(text.indexOf("+ Add") == 0){
             text = '';
         }
-        $(this).html('<input value="'+text+'" style="width:100%">').addClass("editing");
+        $(this).html('<input value="'+text+'">').addClass("editing");
         $(this).find("input").focus();
     }
     return false;
 })
 .on("blur", ".editable input", function(){
     var $this = $(this);
-    var thisobj = this;
-    var thisid = $this.parents(".source").attr("id").split("_")[1];
+    var id = $this.parents(".source").attr("id").split("_")[1];
+    var fbobj = timeline.firebase.child(id);
     var newvalue = $this.val();
+    var oldvalue = '';
 
-    if(newvalue.length == 0){
-        newvalue = $this.parent().data('default');
+    // var oldvalue = fbobj.child('name').val();
+
+    fbobj.once('value', function(snapshot){
+        oldvalue = snapshot.child('name').val();
+    });
+
+    if(newvalue.toLowerCase() !== oldvalue.toLowerCase()){
+        fbobj.update({ name: newvalue });
     }
-    if(newvalue.indexOf("+ Add") == -1 && newvalue.indexOf("+ YouTube") == -1){
 
-        timeline.firebase.child(thisid).update({ name: newvalue });
-
-    }
     setTimeout(function(){ $this.parent().html(newvalue).removeClass("editing"); }, 500);
 })
 .on("click", ".event", function(){
