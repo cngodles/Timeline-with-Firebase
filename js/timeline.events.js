@@ -22,6 +22,32 @@ $(document).ready(function () {
     timeline.firebase.push({'name':eventfields.name,'length':eventfields.days,'startdate':eventfields.date});
     $("#datapool").show().html('Event Added.').delay(10).fadeOut(1000);
 })
+.on("click", ".editable", function(){
+    if(!$(this).hasClass("editing")){
+        var text = $(this).text();
+        if(text.indexOf("+ Add") == 0){
+            text = '';
+        }
+        $(this).html('<input value="'+text+'" style="width:100%">').addClass("editing");
+        $(this).find("input").focus();
+    }
+    return false;
+})
+.on("blur", ".editable input", function(){
+    var $this = $(this);
+    var thisobj = this;
+    var thisid = $this.parents(".source").attr("id").split("_")[1];
+    var newvalue = $this.val();
+
+    if(newvalue.length == 0){
+        newvalue = $this.parent().data('default');
+    }
+    if(newvalue.indexOf("+ Add") == -1 && newvalue.indexOf("+ YouTube") == -1){
+
+        timeline.firebase.child(thisid).update({ name: newvalue });
+
+    }
+    setTimeout(function(){ $this.parent().html(newvalue).removeClass("editing"); }, 500);
 .on("click", ".event", function(){
 	//Load Data Into Box Below.
 	var updateform = $("#form_addevent").html();
