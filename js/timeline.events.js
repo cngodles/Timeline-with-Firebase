@@ -22,4 +22,9 @@ $(document).ready(function () {
     timeline.firebase.push({'name':eventfields.name,'length':eventfields.days,'startdate':eventfields.date});
     $("#datapool").show().html('Event Added.').delay(10).fadeOut(1000);
 })
+.on("click", ".event", function(){
+	//Load Data Into Box Below.
+	var updateform = $("#form_addevent").html();
+	$("#datapool").html("<h2>Update Event</h2><div>"+$(this).find("span").html()+"</div><div>"+$(this).data("length")+"</div><div>"+$(this).data("startdate")+"</div>");
+})
 ;

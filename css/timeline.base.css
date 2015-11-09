@@ -32,5 +32,6 @@
 #time .col:hover {
     background-color:#efefef;
 }
-.event  { position:absolute }
-.event.red  { color:#fff; background-color:red; }
+.event  		{ position:absolute; cursor:move; }
+.event span  	{ padding:0 0 0 10px; }
+.event.red  	{ color:#fff; background-color:red; }
