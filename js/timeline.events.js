@@ -48,6 +48,7 @@ $(document).ready(function () {
 
     }
     setTimeout(function(){ $this.parent().html(newvalue).removeClass("editing"); }, 500);
+})
 .on("click", ".event", function(){
 	//Load Data Into Box Below.
 	var updateform = $("#form_addevent").html();
