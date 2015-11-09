@@ -34,34 +34,20 @@ $(document).ready(function () {
     return false;
 })
 .on("blur", ".editable input", function(){
-    var thisevent = $(this);
-    var thisid = thisevent.parents(".source").attr("id").split("_");
-    var newvalue = thisevent.val();
-    var thistype = thisevent.parent().attr("rel");
-    //console.log(thisid[0]+' '+thisid[1]+' '+newvalue+' '+thistype);
+    var $this = $(this);
+    var thisobj = this;
+    var thisid = $this.parents(".source").attr("id").split("_")[1];
+    var newvalue = $this.val();
+    var thistype = $this.parent().attr("rel");
+
     if(newvalue.length == 0){
-        newvalue = thisevent.parent().data('default');
+        newvalue = $this.parent().data('default');
     }
     if(newvalue.indexOf("+ Add") == -1 && newvalue.indexOf("+ YouTube") == -1){
-        // $.post("ajax_services.php", {"do":"update","type":thisid[0],"target":thistype,"id":thisid[1],"value":newvalue});
 
-        event = timeline.firebase.child();
+        timeline.firebase.child(thisid).update({ name: newvalue });
 
-        console.log(event);
-
-
-        // timeline.firebase.once('value', function(snapshot){
-            
-        //     console.log(snapshot.val());
-
-        //     // var loadedData = snapshot.val();
-        //     // for (var i in loadedData){
-        //     //     if(i == thisid[1]){
-        //     //         loadedData[i].name = newvalue;                    
-        //     //     }
-        //     // };
-        // })
     }
-    setTimeout(function(){ thisevent.parent().html(newvalue).removeClass("editing"); }, 500);
+    setTimeout(function(){ $this.parent().html(newvalue).removeClass("editing"); }, 500);
 })
 ;

@@ -32,3 +32,5 @@
 #time .col:hover {
     background-color:#efefef;
 }
+.event  { position:absolute }
+.event.red  { color:#fff; background-color:red; }
