@@ -28,7 +28,7 @@ $(document).ready(function () {
         if(text.indexOf("+ Add") == 0){
             text = '';
         }
-        $(this).html('<input value="'+text+'">').addClass("editing");
+        $(this).html('<input value="'+text+'" style="width:100%">').addClass("editing");
         $(this).find("input").focus();
     }
     return false;
@@ -38,7 +38,6 @@ $(document).ready(function () {
     var thisobj = this;
     var thisid = $this.parents(".source").attr("id").split("_")[1];
     var newvalue = $this.val();
-    var thistype = $this.parent().attr("rel");
 
     if(newvalue.length == 0){
         newvalue = $this.parent().data('default');

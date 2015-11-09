@@ -54,7 +54,8 @@ var timeline = {
             //Not sure why I had to add 1 to get them positioned correctly, but that is where we are.
             console.log("Start Day Seperation: "+eventdays);
 
-            $("#time").append('<div class="event source" id="event_'+this.events[i].id+'" style="width:'+(this.events[i].length * 41)+'px; height:30px; background-color:red; position:absolute; color:#fff; top:'+eventpostop+'px; line-height:30px; left:'+(eventdays * 41)+'px;"><p class="editable" style="margin:0 0 0 20px;">'+this.events[i].name+'</p></div>');
+           $("#time").append('<div class="event source '+this.events[i].color+'" data-startdate="'+this.events[i].startdate+'" id="event_'+this.events[i].id+'" style="position:absolute; width:'+(this.events[i].length * this.width)+'px; height:'+this.height+'px; line-height:'+this.height+'px; top:'+eventpostop+'px; left:'+(eventdays * this.width)+'px;"><p class="editable" style="margin:0 0 0 20px; width:40%">'+this.events[i].name+'</p></div>');
+
             eventpostop += 40;
         }
         this.resizers();
@@ -162,5 +163,4 @@ var timeline = {
             $(this).width(totitems * this.width);
         });
     }
-
 }
