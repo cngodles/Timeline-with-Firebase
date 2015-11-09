@@ -48,5 +48,9 @@ $(document).ready(function () {
 
     }
     setTimeout(function(){ $this.parent().html(newvalue).removeClass("editing"); }, 500);
+.on("click", ".event", function(){
+	//Load Data Into Box Below.
+	var updateform = $("#form_addevent").html();
+	$("#datapool").html("<h2>Update Event</h2><div>"+$(this).find("span").html()+"</div><div>"+$(this).data("length")+"</div><div>"+$(this).data("startdate")+"</div>");
 })
 ;
