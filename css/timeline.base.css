@@ -35,3 +35,4 @@
 .event  		{ position:absolute; cursor:move; }
 .event span  	{ padding:0 0 0 10px; }
 .event.red  	{ color:#fff; background-color:red; }
+.event.blue  	{ color:#fff; background-color:blue; }
