@@ -10,7 +10,7 @@ $(document).ready(function () {
 })
 .on("click", ".action_addevent", function(e){
     e.preventDefault();
-    timeline.myevents.push({'color':'red','name':'Sample Event 4','length':16,'startdate':'2010-06-17'});
+    timeline.myevents.push({'name':'Sample Event 4','length':16,'startdate':'2010-06-17'});
 })
 .on("click", ".action_addformevent", function(e){
     e.preventDefault();
@@ -25,11 +25,14 @@ $(document).ready(function () {
 .on("click", ".action_updateformevent", function(e){
     e.preventDefault();
     var eventfields = [];
-    eventfields.name = $("#event_name").val();
-    eventfields.days = $("#event_length").val();
-    eventfields.date = $("#event_startdate").val();
+    eventfields.name = $("#event_name_update").val();
+    eventfields.days = $("#event_length_update").val();
+    eventfields.date = $("#event_startdate_update").val();
+    eventfields.eventid = $("#event_id_update").val();
 
-    timeline.firebase.update({ 'name': eventfields.name, 'startdate': eventfields.date, 'length': eventfields.days });
+    console.log(eventfields);
+
+    timeline.myevents.child(eventfields.eventid).update({ 'name': eventfields.name, 'startdate': eventfields.date, 'length': eventfields.days });
 })
 .on("click", ".editable", function(){
     if(!$(this).hasClass("editing")){
@@ -60,23 +63,22 @@ $(document).ready(function () {
     setTimeout(function(){ $this.parent().html(newvalue).removeClass("editing"); }, 500);
 })
 .on("click", ".event", function(){
-	//Load Data Into Box Below.
-	var updateform = $("#form_addevent").html();
-	$("#datapool").html("<h2>Update Event</h2><div>"+$(this).find("span").html()+"</div><div>"+$(this).data("length")+"</div><div>"+$(this).data("startdate")+"</div>");
+    //Load Data Into Box Below.
+    var updateform = $("#form_addevent").html();
+    $("#datapool").html("<h2>Update Event</h2><div>"+$(this).find("span").html()+"</div><div>"+$(this).data("length")+"</div><div>"+$(this).data("startdate")+"</div>");
 })
 .on("click", ".dialog-button", function(){
     var $this = $(this);
     var id = $this.parents(".source").attr("id").split("_")[1];
-    var fbobj = timeline.firebase.child(id);
+    var fbobj = timeline.myevents.child(id);
 
-    // fbobj.child();
+    $(".dialog").dialog();
 
-    // $(".dialog").dialog();
-
-    // fbobj.once("value", function(snapshot){
-    //     $("input[name='name']").val(snapshot.child('name').val());
-    //     $("input[name='startdate']").val(snapshot.child('startdate').val());
-    //     $("input[name='length']").val(snapshot.child('length').val());
-    // });
+    fbobj.once("value", function(snapshot){
+        $("input[name='name']").val(snapshot.child('name').val());
+        $("input[name='startdate']").val(snapshot.child('startdate').val());
+        $("input[name='length']").val(snapshot.child('length').val());
+        $("input[name='eventid']").val(id);
+    });
 })
 ;
