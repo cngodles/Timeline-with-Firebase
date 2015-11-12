@@ -10,7 +10,7 @@ $(document).ready(function () {
 })
 .on("click", ".action_addevent", function(e){
     e.preventDefault();
-    timeline.firebase.push({'name':'Sample Event 3','length':16,'startdate':'2010-6-17'});
+    timeline.myevents.push({'name':'Sample Event 4','length':16,'startdate':'2010-06-17'});
 })
 .on("click", ".action_addformevent", function(e){
     e.preventDefault();
