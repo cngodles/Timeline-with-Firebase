@@ -6,7 +6,8 @@ var timeline = {
     width: 41,
     height:30,
     firebase: false,
-    projectbase:false,
+    myevents:false,
+	projectbase:false,
     FBauthdata:null,
 	events: [],
     projects:[],
@@ -16,13 +17,15 @@ var timeline = {
         this.firebase = new Firebase('https://ralena.firebaseio.com/timeline/events');
         this.FBauthdata = this.firebase.getAuth();
 		if (this.FBauthdata) {
-			this.grabEvents();
+			thisobj.myevents = thisobj.firebase.child(thisobj.FBauthdata.uid);
+			thisobj.grabEvents();
 		} else {
 			this.firebase.authWithOAuthPopup("facebook", function(error, authData) {
 				if (error) {
 					console.log("Login Failed!", error);
 				} else {
 					console.log("Authenticated successfully with payload:", authData);
+					thisobj.myevents = thisobj.firebase.child(thisobj.FBauthdata.uid);
 					thisobj.grabEvents();
 				}
 			});
