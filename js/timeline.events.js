@@ -22,6 +22,15 @@ $(document).ready(function () {
     timeline.firebase.push({'name':eventfields.name,'length':eventfields.days,'startdate':eventfields.date});
     $("#datapool").show().html('Event Added.').delay(10).fadeOut(1000);
 })
+.on("click", ".action_updateformevent", function(e){
+    e.preventDefault();
+    var eventfields = [];
+    eventfields.name = $("#event_name").val();
+    eventfields.days = $("#event_length").val();
+    eventfields.date = $("#event_startdate").val();
+
+    timeline.firebase.update({ 'name': eventfields.name, 'startdate': eventfields.date, 'length': eventfields.days });
+})
 .on("click", ".editable", function(){
     if(!$(this).hasClass("editing")){
         var text = $(this).text();
@@ -40,8 +49,6 @@ $(document).ready(function () {
     var newvalue = $this.val();
     var oldvalue = '';
 
-    // var oldvalue = fbobj.child('name').val();
-
     fbobj.once('value', function(snapshot){
         oldvalue = snapshot.child('name').val();
     });
@@ -56,5 +63,20 @@ $(document).ready(function () {
 	//Load Data Into Box Below.
 	var updateform = $("#form_addevent").html();
 	$("#datapool").html("<h2>Update Event</h2><div>"+$(this).find("span").html()+"</div><div>"+$(this).data("length")+"</div><div>"+$(this).data("startdate")+"</div>");
+})
+.on("click", ".dialog-button", function(){
+    var $this = $(this);
+    var id = $this.parents(".source").attr("id").split("_")[1];
+    var fbobj = timeline.firebase.child(id);
+
+    fbobj.child()
+
+    // $(".dialog").dialog();
+
+    // fbobj.once("value", function(snapshot){
+    //     $("input[name='name']").val(snapshot.child('name').val());
+    //     $("input[name='startdate']").val(snapshot.child('startdate').val());
+    //     $("input[name='length']").val(snapshot.child('length').val());
+    // });
 })
 ;
