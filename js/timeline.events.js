@@ -69,7 +69,7 @@ $(document).ready(function () {
     var id = $this.parents(".source").attr("id").split("_")[1];
     var fbobj = timeline.firebase.child(id);
 
-    fbobj.child()
+    // fbobj.child();
 
     // $(".dialog").dialog();
 
