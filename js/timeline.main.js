@@ -7,24 +7,29 @@ var timeline = {
     height:30,
     firebase: false,
     projectbase:false,
-    events: [],
+    FBauthdata:null,
+	events: [],
     projects:[],
     monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     init: function () {
         var thisobj = this;
         this.firebase = new Firebase('https://ralena.firebaseio.com/timeline/events');
-        this.firebase.on('value', function (snapshot) {
-            var loadedData = snapshot.val();
-            timeline.events = [];   
-            for (var i in loadedData) {
-                if (loadedData.hasOwnProperty(i)) {
-                    timeline.events.push({'id':i,'color':loadedData[i].color,'name':loadedData[i].name,'length':loadedData[i].length,'startdate':loadedData[i].startdate});
-                }
-            }
+        this.FBauthdata = this.firebase.getAuth();
+		if (this.FBauthdata) {
+			this.grabEvents();
+		} else {
+			this.firebase.authWithOAuthPopup("facebook", function(error, authData) {
+				if (error) {
+					console.log("Login Failed!", error);
+				} else {
+					console.log("Authenticated successfully with payload:", authData);
+					thisobj.grabEvents();
+				}
+			});
+		}
+		
 
-            thisobj.addEvents();
-        });
-        /*
+		/*
         this.projectbase = new Firebase('https://ralena.firebaseio.com/timeline/projects');
         this.projectbase.on('value', function (snapshot) {
             var loadedProjectData = snapshot.val();
@@ -39,6 +44,19 @@ var timeline = {
         });
         */
     },
+	grabEvents:function(){
+		var thisobj = this;
+		this.firebase.on('value', function (snapshot) {
+			var loadedData = snapshot.val();
+			thisobj.events = [];   
+			for (var i in loadedData) {
+				if (loadedData.hasOwnProperty(i)) {
+					thisobj.events.push({'id':i,'color':loadedData[i].color,'name':loadedData[i].name,'length':loadedData[i].length,'startdate':loadedData[i].startdate});
+				}
+			}
+			thisobj.addEvents();
+		});
+	},
     addEvents: function () {
         //Loops through Firebase events and adds them to the timeline.
         $(".event").remove();
@@ -110,6 +128,16 @@ var timeline = {
             }
       });  
     },
+	auth:function(){
+		var ref = new Firebase("https://ralena.firebaseio.com");
+		ref.authWithOAuthPopup("facebook", function(error, authData) {
+			if (error) {
+				console.log("Login Failed!", error);
+			} else {
+				console.log("Authenticated successfully with payload:", authData);
+			}
+		});
+	},
     run: function () {
         //var start = new Date("06/14/2010");
         var end = new Date();
