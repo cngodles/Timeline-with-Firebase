@@ -51,10 +51,18 @@ var timeline = {
 		var thisobj = this;
 		this.firebase.on('value', function (snapshot) {
 			var loadedData = snapshot.val();
+			thisobj.rawdata = loadedData;
 			thisobj.events = [];   
-			for (var i in loadedData) {
-				if (loadedData.hasOwnProperty(i)) {
-					thisobj.events.push({'id':i,'color':loadedData[i].color,'name':loadedData[i].name,'length':loadedData[i].length,'startdate':loadedData[i].startdate});
+			for (var i in thisobj.rawdata) {
+				if (thisobj.rawdata.hasOwnProperty(i)) {
+					var subdata = thisobj.rawdata[i];
+					for (var j in subdata) {
+						if (subdata.hasOwnProperty(j)) {
+							if(typeof subdata[j] === 'object'){
+								thisobj.events.push({'uid':i,'id':j,'color':subdata[j].color,'name':subdata[j].name,'length':subdata[j].length,'startdate':subdata[j].startdate});
+							}
+						}
+					}
 				}
 			}
 			thisobj.addEvents();
@@ -74,7 +82,7 @@ var timeline = {
             var eventdays = Math.ceil(millisBetween / millisecondsPerDay) + 1;
             //Not sure why I had to add 1 to get them positioned correctly, but that is where we are.
             console.log("Start Day Seperation: "+eventdays);
-            $("#time").append('<div class="event source '+this.events[i].color+'" data-startdate="'+this.events[i].startdate+'" data-length="'+this.events[i].length+'" id="event_'+this.events[i].id+'" style="position:absolute; width:'+(this.events[i].length * this.width)+'px; height:'+this.height+'px; line-height:'+this.height+'px; top:'+eventpostop+'px; left:'+(eventdays * this.width)+'px;"><span class="editable">'+this.events[i].name+'</span><div class="dialog-button">+</div></div>');
+            $("#time").append('<div class="event source '+this.events[i].color+'" data-startdate="'+this.events[i].startdate+'" data-length="'+this.events[i].length+'" data-uid="'+this.events[i].uid+'" id="event_'+this.events[i].id+'" style="position:absolute; width:'+(this.events[i].length * this.width)+'px; height:'+this.height+'px; line-height:'+this.height+'px; top:'+eventpostop+'px; left:'+(eventdays * this.width)+'px;"><span>'+this.events[i].name+'</span><div class="dialog-button">+</div></div>');
             eventpostop += 40;
         }
         this.resizers();
@@ -106,9 +114,13 @@ var timeline = {
                     console.log(daystosubtract);
                     var originalstartdate = new Date(ui.originalElement.data('startdate'));
 					var finalnewleftdate = ($.datepicker.formatDate("yy-mm-dd", new Date(originalstartdate.getTime() + (86400000 * daystosubtract))));
-					thisobj.firebase.child(thisid[1]).update({'length':newlength,'startdate':finalnewleftdate});
+					if(thisobj.FBauthdata.uid  === ui.originalElement.data('uid')){
+						thisobj.myevents.child(thisid[1]).update({'length':newlength,'startdate':finalnewleftdate});
+					}
                 } else {
-					thisobj.firebase.child(thisid[1]).update({'length':newlength});
+					if(thisobj.FBauthdata.uid  === ui.originalElement.data('uid')){
+						thisobj.myevents.child(thisid[1]).update({'length':newlength});
+					}
 				}
             }
         })
@@ -126,7 +138,9 @@ var timeline = {
                 } else {
                     newstartdate = $.datepicker.formatDate("yy-mm-dd", thisobj.start);
                 }
-                thisobj.firebase.child(thisid[1]).update({'startdate':newstartdate});
+                if(thisobj.FBauthdata.uid  === ui.helper.data('uid')){
+					thisobj.firebase.child(thisid[1]).update({'startdate':newstartdate});
+				}
                 console.log(newstartdate);
             }
       });  
