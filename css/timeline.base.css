@@ -34,5 +34,12 @@
 }
 .event  		{ position:absolute; cursor:move; }
 .event span  	{ padding:0 0 0 10px; }
+
 .event.red  	{ color:#fff; background-color:red; }
-.event.blue  	{ color:#fff; background-color:blue; }
+.event.red .dialog-button{ background:darkred; }
+
+.event.blue     { color:#fff; background-color:blue; }
+.event.blue .dialog-button{ background:darkblue; }
+
+.dialog-button  { display: inline-block; position:absolute; right:20px; width:30px; text-align: center; cursor:pointer; }
+.button         { cursor:pointer; }
